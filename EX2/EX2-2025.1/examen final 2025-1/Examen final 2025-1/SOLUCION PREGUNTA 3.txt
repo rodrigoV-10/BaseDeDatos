@@ -1,0 +1,111 @@
+PREGUNTA 3A
+***********
+
+CREATE OR REPLACE PROCEDURE DETALLE_VIAJES_PASAJERO (
+    P_TIPO_DOCUMENTO IN AP_PASAJEROS.TIPO_DOCUMENTO%TYPE,
+    P_NRO_DOCUMENTO IN AP_PASAJEROS.NRO_DOCUMENTO%TYPE )
+IS
+V_EXISTE_PASAJERO NUMBER;
+
+CURSOR CUR_ITEM (PC_TIPO_DOCUMENTO IN CHAR, PC_NRO_DOCUMENTO IN VARCHAR2) IS
+       SELECT 
+            P.PASAJERO_ID,
+            P.NOMBRES || ' ' || P.AP_PATERNO || ' ' || P.AP_MATERNO AS NOMBRE_COMPLETO,
+            V.VUELO_ID,
+            V.FECHA_HORA_PARTIDA,
+            V.FECHA_HORA_LLEGADA,
+            A1.NOMBRE AS AEROPUERTO_ORIGEN,
+            C1.NOMBRE_CIUDAD AS CIUDAD_ORIGEN,
+            A2.NOMBRE AS AEROPUERTO_DESTINO,
+            C2.NOMBRE_CIUDAD AS CIUDAD_DESTINO,
+            B.CATEGORIA,
+            B.PRECIO_BOLETO_USD
+        FROM AP_PASAJEROS P,  AP_BOLETOS B,  AP_VUELOS V, AP_AEROPUERTOS A1 ,  AP_CIUDADES C1,  AP_AEROPUERTOS A2, AP_CIUDADES C2
+        WHERE 
+        P.PASAJERO_ID = B.PASAJERO_ID 
+        AND B.VUELO_ID = V.VUELO_ID
+        AND V.AEROPUERTO_PARTIDA_ID = A1.AEROPUERTO_ID
+        AND A1.CIUDAD_ID = C1.CIUDAD_ID
+        AND V.AEROPUERTO_LLEGADA_ID = A2.AEROPUERTO_ID
+        AND A2.CIUDAD_ID = C2.CIUDAD_ID
+        AND P.TIPO_DOCUMENTO = PC_TIPO_DOCUMENTO
+        AND P.NRO_DOCUMENTO = PC_NRO_DOCUMENTO
+        ORDER BY V.FECHA_HORA_PARTIDA;
+BEGIN
+    -- Verificar si el pasajero existe
+    SELECT COUNT(*) INTO V_EXISTE_PASAJERO
+    FROM AP_PASAJEROS
+    WHERE TIPO_DOCUMENTO = P_TIPO_DOCUMENTO
+    AND NRO_DOCUMENTO = P_NRO_DOCUMENTO;
+
+    IF V_EXISTE_PASAJERO = 0 THEN
+        DBMS_OUTPUT.PUT_LINE('Error: No existe un pasajero con los datos proporcionados.');
+        RETURN;
+    END IF;
+    
+    -- Si el pasajero existe, mostrar sus viajes
+    FOR R IN CUR_ITEM (P_TIPO_DOCUMENTO, P_NRO_DOCUMENTO) LOOP
+        DBMS_OUTPUT.PUT_LINE('Pasajero: ' || R.NOMBRE_COMPLETO);
+       DBMS_OUTPUT.PUT_LINE('Vuelo: ' || R.VUELO_ID || ' | Origen: ' || R.CIUDAD_ORIGEN || ' (' || R.AEROPUERTO_ORIGEN || ')' ||
+                             ' | Destino: ' || R.CIUDAD_DESTINO || ' (' || R.AEROPUERTO_DESTINO || ')');
+   DBMS_OUTPUT.PUT_LINE('Fecha Partida: ' || TO_CHAR(R.FECHA_HORA_PARTIDA, 'YYYY-MM-DD HH24:MI') ||
+                             ' | Fecha Llegada: ' || TO_CHAR(R.FECHA_HORA_LLEGADA, 'YYYY-MM-DD HH24:MI'));
+   DBMS_OUTPUT.PUT_LINE('Categoría: ' || R.CATEGORIA || ' | Precio: USD ' || R.PRECIO_BOLETO_USD);
+        DBMS_OUTPUT.PUT_LINE('----------------------------------------------------------');
+    END LOOP;
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Ha ocurrido un error inesperado: ' || SQLERRM);
+
+END;
+
+
+PREGUNTA 3B
+***********
+
+create or replace function f_obtener_pasajero_mas_viajes( p_sexo char )
+return varchar2
+is
+   
+   cursor c_pasajeros
+   is 
+   select * 
+   from AP_PASAJEROS where sexo = p_sexo;
+
+   cursor c_cuenta( p_pasajero_id number )
+   is
+   select count(*) as cantidad
+   from AP_BOLETOS B, AP_PASAJEROS P
+   where B.pasajero_id = P.pasajero_id and P.pasajero_id = p_pasajero_id;
+   
+   v_datos c_pasajeros%rowtype;  
+   v_cantmax number;
+   
+begin
+   
+   v_cantmax := 0;
+   
+   for v_regpasajero in c_pasajeros loop
+      
+       for v_regcuenta in c_cuenta( v_regpasajero.pasajero_id ) loop
+           
+            if v_regcuenta.cantidad > v_cantmax then
+                 
+                 v_cantmax := v_regcuenta.cantidad;
+                 v_datos := v_regpasajero;
+            
+            end if;
+      
+       end loop;
+    
+    end loop;
+    
+    return v_datos.nombres || ' ' || v_datos.ap_paterno || ' ' || v_datos.ap_materno;
+
+end;
+
+
+
+
+
+

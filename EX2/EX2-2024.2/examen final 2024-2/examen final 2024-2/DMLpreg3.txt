@@ -1,0 +1,36 @@
+insert into REGION_PERU ( idregion, nombre ) values ( 1, 'CUZCO' );
+insert into REGION_PERU ( idregion, nombre ) values ( 2, 'PIURA' );
+insert into REGION_PERU ( idregion, nombre ) values ( 3, 'HUANUCO' );
+insert into REGION_PERU ( idregion, nombre ) values ( 4, 'TACNA' );
+
+insert into PARTIDO_POLITICO ( idpartido, nombre ) values ( 1, 'BLANCO' );
+insert into PARTIDO_POLITICO ( idpartido, nombre ) values ( 2, 'NULO' );
+insert into PARTIDO_POLITICO ( idpartido, nombre ) values ( 3, 'ABC' );
+insert into PARTIDO_POLITICO ( idpartido, nombre ) values ( 4, 'PQR' );
+insert into PARTIDO_POLITICO ( idpartido, nombre ) values ( 5, 'XYZ' );
+
+insert into VOTACION ( idregion, idpartido, votos ) values( 1, 1, 1210 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 1, 2, 897 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 1, 3, 5890 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 1, 4, 8163 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 1, 5, 2356 );
+
+insert into VOTACION ( idregion, idpartido, votos ) values( 2, 1, 701 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 2, 2, 542 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 2, 3, 4872 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 2, 4, 6312 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 2, 5, 7125 );
+
+insert into VOTACION ( idregion, idpartido, votos ) values( 3, 1, 432 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 3, 2, 924 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 3, 3, 3587 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 3, 4, 4128 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 3, 5, 2574 );
+
+insert into VOTACION ( idregion, idpartido, votos ) values( 4, 1, 301 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 4, 2, 587 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 4, 3, 2803 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 4, 4, 5121 );
+insert into VOTACION ( idregion, idpartido, votos ) values( 4, 5, 4799 );
+
+

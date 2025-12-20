@@ -1,0 +1,19 @@
+create table REGION_PERU
+( idregion number primary key,
+  nombre varchar2(10) not null );
+
+create table PARTIDO_POLITICO
+( idpartido number primary key,
+  nombre varchar2(6) not null );
+
+create table VOTACION
+( idregion number,
+  idpartido number,
+  votos number,
+  primary key (idregion,idpartido),
+  foreign key (idregion) references REGION_PERU(idregion),
+  foreign key (idpartido) references PARTIDO_POLITICO(idpartido) );
+
+create table VOTOS_PARTIDO
+( nombre_region varchar2(10) not null,
+  votos number not null );
